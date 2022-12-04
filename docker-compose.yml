@@ -1,0 +1,37 @@
+version: "3"
+
+services:
+  backend1:
+    container_name: backend1
+    build: .
+    restart: always
+    networks:
+      - backend
+    environment:
+      - JWT_SECRET_KEY=ASDXCCSAASDSH@&@SDASDJH837213
+      - JWT_REFRESH_SECRET_KEY=FAKJ@s2828ASDJKWH@5123SdASDFALK
+
+  backend2:
+    container_name: backend2
+    build: .
+    restart: always
+    networks:
+      - backend
+    environment:
+      - JWT_SECRET_KEY=ASDXCCSAASDSH@&@SDASDJH837213
+      - JWT_REFRESH_SECRET_KEY=FAKJ@s2828ASDJKWH@5123SdASDFALK
+
+  nginx:
+    image: nginx
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    ports:
+      - "80:80"
+    networks:
+      - backend
+    depends_on:
+      - "backend1"
+      - "backend2"
+
+networks:
+  backend:
