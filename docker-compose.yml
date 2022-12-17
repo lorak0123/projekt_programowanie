@@ -22,16 +22,20 @@ services:
       - JWT_REFRESH_SECRET_KEY=FAKJ@s2828ASDJKWH@5123SdASDFALK
 
   nginx:
+    container_name: nginx
     image: nginx
+    restart: always
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
     ports:
       - "80:80"
     networks:
       - backend
-    depends_on:
-      - "backend1"
-      - "backend2"
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "http://localhost/healthcheck"]
+      interval: 1m
+      timeout: 10s
+      retries: 3
 
 networks:
   backend:
